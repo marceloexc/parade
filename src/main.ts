@@ -22,12 +22,11 @@ interface Chromaticity {
 }
 
 const imageInput = document.getElementById('image-input') as HTMLInputElement;
-const canvas = document.getElementById('vectorscope') as HTMLCanvasElement;
+const canvas = document.getElementById('image') as HTMLCanvasElement;
 const canvasContext = canvas.getContext('2d')!;
-const resultCanvas = document.getElementById('result') as HTMLCanvasElement;
 
-const test = document.getElementById("test") as HTMLCanvasElement;
-const testContext = test.getContext("2d")!;
+const scopeCanvas = document.getElementById("vectorscope") as HTMLCanvasElement;
+const scopeCtx = scopeCanvas.getContext("2d")!;
 
 imageInput.addEventListener('change', handleImage);
 
@@ -181,8 +180,8 @@ function getChromaticity(r: number, y: number, b: number): Chromaticity {
 function plotVectorscope(x: number, y: number, r: number, g: number, b: number): void{
   
   // console.log("Plotting with " , x, " " , y);
-  const centerX = test.width / 2;
-  const centerY = test.height / 2;
+  const centerX = scopeCanvas.width / 2;
+  const centerY = scopeCanvas.height / 2;
   const radius = Math.min(centerX, centerY) * 0.9;
   
   x = Math.max(-1, Math.min(1, x));
@@ -196,45 +195,45 @@ function plotVectorscope(x: number, y: number, r: number, g: number, b: number):
   
   // console.log("Plot coords: ", plotX, plotY);
   
-  testContext.fillStyle = "rgba(" + r + "," + g + "," + b + ", 0.05 )"; 
-  testContext.beginPath();
-  testContext.arc(plotX, plotY, 1, 0, 2 * Math.PI);
-  testContext.fill();
+  scopeCtx.fillStyle = "rgba(" + r + "," + g + "," + b + ", 0.05 )"; 
+  scopeCtx.beginPath();
+  scopeCtx.arc(plotX, plotY, 1, 0, 2 * Math.PI);
+  scopeCtx.fill();
 }
 
 function drawVectorBackground(): void {
-    const centerX = test.width / 2;
-    const centerY = test.height / 2;
+    const centerX = scopeCanvas.width / 2;
+    const centerY = scopeCanvas.height / 2;
     const radius = Math.min(centerX, centerY) * 0.9;
 
     // clear prev canvas
-    testContext.clearRect(0, 0, test.width, test.height);
+    scopeCtx.clearRect(0, 0, scopeCanvas.width, scopeCanvas.height);
     
     // circular boundary
-    testContext.beginPath();
-    testContext.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-    testContext.strokeStyle = 'rgba(200, 200, 200, 0.5)';
-    testContext.stroke();
+    scopeCtx.beginPath();
+    scopeCtx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    scopeCtx.strokeStyle = 'rgba(200, 200, 200, 0.5)';
+    scopeCtx.stroke();
     
     // draw axes
-    testContext.beginPath();
-    testContext.moveTo(centerX - radius, centerY);
-    testContext.lineTo(centerX + radius, centerY);
-    testContext.moveTo(centerX, centerY - radius);
-    testContext.lineTo(centerX, centerY + radius);
-    testContext.strokeStyle = 'rgba(150, 150, 150, 0.5)';
-    testContext.stroke();
+    scopeCtx.beginPath();
+    scopeCtx.moveTo(centerX - radius, centerY);
+    scopeCtx.lineTo(centerX + radius, centerY);
+    scopeCtx.moveTo(centerX, centerY - radius);
+    scopeCtx.lineTo(centerX, centerY + radius);
+    scopeCtx.strokeStyle = 'rgba(150, 150, 150, 0.5)';
+    scopeCtx.stroke();
     
     // circle axes references
-    testContext.beginPath();
-    testContext.arc(centerX, centerY, radius * 0.75, 0, 2*Math.PI);
-    testContext.stroke();
+    scopeCtx.beginPath();
+    scopeCtx.arc(centerX, centerY, radius * 0.75, 0, 2*Math.PI);
+    scopeCtx.stroke();
     
-    testContext.beginPath();
-    testContext.arc(centerX, centerY, radius * 0.5, 0, 2*Math.PI);
-    testContext.stroke();
+    scopeCtx.beginPath();
+    scopeCtx.arc(centerX, centerY, radius * 0.5, 0, 2*Math.PI);
+    scopeCtx.stroke();
     
-    testContext.beginPath();
-    testContext.arc(centerX, centerY, radius * 0.25, 0, 2*Math.PI);
-    testContext.stroke();
+    scopeCtx.beginPath();
+    scopeCtx.arc(centerX, centerY, radius * 0.25, 0, 2*Math.PI);
+    scopeCtx.stroke();
 }
