@@ -224,4 +224,17 @@ function drawVectorBackground(): void {
     testContext.lineTo(centerX, centerY + radius);
     testContext.strokeStyle = 'rgba(150, 150, 150, 0.5)';
     testContext.stroke();
+    
+    // circle axes references
+    testContext.beginPath();
+    testContext.arc(centerX, centerY, radius * 0.75, 0, 2*Math.PI);
+    testContext.stroke();
+    
+    testContext.beginPath();
+    testContext.arc(centerX, centerY, radius * 0.5, 0, 2*Math.PI);
+    testContext.stroke();
+    
+    testContext.beginPath();
+    testContext.arc(centerX, centerY, radius * 0.25, 0, 2*Math.PI);
+    testContext.stroke();
 }
