@@ -1,0 +1,41 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background-color: #444444;
+}
+
+.workspace {
+	display: grid;
+	grid-template-areas: 
+		'sidebar'
+		'main';
+}
+
+.workspace > * {
+	padding: 1rem;
+}
+
+.workspace > .sidebar {
+	grid-area: sidebar;
+}
+
+.workspace > main {
+	grid-area: main;
+}
+
+.workspace {
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-areas: 'sidebar main';
+}
+
+.result {
+	max-width: 400px;
+}
+
+canvas {
+	border: 1px solid #000;
+	display: block;
+	margin-top: 20px;
+}

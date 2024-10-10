@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>parade</title>
-  <style>
-  canvas {
-    border: 1px solid #000;
-    display: block;
-    margin-top: 20px;
-  }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>parade</title>
+    <link rel="stylesheet" href="/src/style.css">
+    <script type="module" src="/src/main.ts"></script>
 </head>
 <body>
-  <input type="file" id="image-input" accept="image/*">
-  <canvas id="image" width="512" height="512"></canvas>
+    <h1>Parade</h1>
   
-  <canvas id="vectorscope" width="512" height="512"></canvas>
-  <div id="result">
-    
-  </div>
-  <script type="module" src="/src/main.ts"></script>
+    <div class="workspace">
+        <section class="sidebar">
+          <input type="file" id="image-input" accept="image/*">
+          <div id="result">
+              <canvas class="result" id="image" width="512" height="512"></canvas>
+          </div>
+        </section>
+        
+        <main class="preview">
+            <canvas id="vectorscope" width="512" height="512"></canvas>
+        </main>
+    </div>
 </body>
 </html>
