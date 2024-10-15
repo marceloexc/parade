@@ -8,15 +8,17 @@
     <script type="module" src="/src/main.ts"></script>
 </head>
 <body>
+    <header>
     <h1>Parade</h1>
+    </header>
   
     <div class="workspace">
-        <section class="sidebar">
-          <input type="file" id="image-input" accept="image/*">
-          <div id="result">
-              <canvas class="result" id="image" width="512" height="512"></canvas>
-          </div>
-        </section>
+            <div id="result" class="vectorscope">
+                  <canvas class="result" id="image" width="512" height="512"></canvas>
+              </div>
+            <div class="config">
+                <input type="file" id="image-input" accept="image/*">
+            </div>
         
         <main class="preview">
             <canvas id="vectorscope" width="512" height="512"></canvas>
