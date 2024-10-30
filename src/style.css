@@ -1,41 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Trispace:wght@100..800&display=swap');
+
 * {
 	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
 }
 
 body {
-	background-color: #444444;
+	background-color: #6A6867;
+	font-family: "Trispace", sans-serif;
+}
+
+header {
+	height: 42px;
+	background-color: #333;
+	color: white;
+	display: flex;
+	align-items: center;
+	padding: 0 1rem;
+}
+
+header h1 {
+	font-optical-sizing: auto;
+	font-weight: 800;
+	font-style: normal;
+	font-variation-settings: "wdth" 112.5;
 }
 
 .workspace {
 	display: grid;
 	grid-template-areas: 
-		'sidebar'
-		'main';
+		"vectorscope image"
+		"settings image";
+	grid-template-columns: 400px 1fr;
+	grid-template-rows: 400px 1fr;
+	height: calc(100vh - 42px);
 }
 
-.workspace > * {
-	padding: 1rem;
+.image_thumbnail {
+	grid-area: vectorscope;
+	border: 1px solid black;
+	align-content: center;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
 }
 
-.workspace > .sidebar {
-	grid-area: sidebar;
+.image_thumbnail canvas {
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: contain;
 }
 
-.workspace > main {
-	grid-area: main;
+.config {
+	grid-area: settings;
+	border: 1px solid black;
+	border-top: none;
 }
 
-.workspace {
-	grid-template-columns: repeat(2, 1fr);
-	grid-template-areas: 'sidebar main';
+.vectorscope_preview {
+	grid-area: image;
+	border: 1px solid black;
+	border-left: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
 }
-
-.result {
-	max-width: 400px;
+.vectorscope_preview canvas {
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: contain;
 }
 
 canvas {
-	border: 1px solid #000;
 	display: block;
-	margin-top: 20px;
+	width: 100%;
+}
+
+.config {
+	padding: 1rem;
 }
