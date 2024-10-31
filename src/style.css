@@ -81,3 +81,11 @@ canvas {
 .config {
 	padding: 1rem;
 }
+
+
+input[type=file] {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: fade;
+	width: 200px;
+}
