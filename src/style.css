@@ -89,3 +89,11 @@ input[type=file] {
 	text-overflow: fade;
 	width: 200px;
 }
+
+#drop-area {
+	border: 3px dashed blue;
+}
+
+#drop-area.highlight {
+	border-color: red;
+}

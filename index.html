@@ -17,7 +17,15 @@
                   <canvas class="result" id="image" width="512" height="512"></canvas>
               </div>
             <div class="config">
-                <input type="file" id="image-input" accept="image/*">
+
+                <div id="drop-area">
+                    <input type="file" id="image-input" accept="image/*" onchange="handleImage(this.files)">
+
+                    <br>
+
+                    <button id="refresh">Refresh</button>
+                    <button id="cursor_test">Change cursor</button>
+                </div>
             </div>
 
         <main class="vectorscope_preview">
