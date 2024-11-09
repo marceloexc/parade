@@ -41,6 +41,8 @@ dropArea.addEventListener('dragleave', handleImage, false);
 dropArea.addEventListener('dragover', handleImage, false);
 dropArea.addEventListener('drop', handleImage, false);
 
+const imageThumbnailFilename = document.getElementById('image_thumbnail_filename');
+
 ['dragenter', 'dragleave', 'dragover', 'drop'].forEach(eventName => {
     dropArea.addEventListener(eventName, preventDefaults, false)
 });
@@ -72,6 +74,7 @@ function handleDrop(e: DragEvent): void {
     let dt = e.dataTransfer;
     if (dt) {
         const file = dt.files[0];
+        updateImageFilename(dt.files[0].name)
         handleImage(file);
     }
 }
@@ -79,6 +82,7 @@ function handleDrop(e: DragEvent): void {
 function handleInputFile(e: Event): void {
     const file = (e.target as HTMLInputElement).files?.[0];
     if (!file) return;
+    updateImageFilename(file.name)
     handleImage(file)
 }
 
@@ -100,6 +104,10 @@ function handleImage(file: File): void {
         img.src = event.target?.result as string;
     }
     reader.readAsDataURL(file);
+}
+
+function updateImageFilename(filename: string): void {
+    imageThumbnailFilename.textContent = filename;
 }
 
 function getImageData(): void {
