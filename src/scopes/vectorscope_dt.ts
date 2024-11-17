@@ -1,0 +1,186 @@
+import { Chromaticity, RYB, HCV } from "../types.ts";
+
+export function getImageData(): void {
+    drawVectorBackground();
+    const imageData = canvasContext.getImageData(0, 0, canvas.width, canvas.height);
+
+    const imageDataArray = imageData.data;
+    // the imageDataArray looks a bit like this:
+
+    // 0 70
+    // 1 63
+    // 2 47
+    // 3 255
+    // 4 40
+    // 5 41
+    // 6 39
+    // 7 255
+
+    // its doing this in the form of RGBA. Thus, to iterate over it, we have our index append itself by 4 everytime
+
+    for (let i = 0; i < imageDataArray.length; i += 40) {
+        const r = imageDataArray[i];
+        const g = imageDataArray[i+1];
+        const b = imageDataArray[i+2];
+
+        const ryb = convertToRYB(r, g, b);
+        const chromaticity = getChromaticity(ryb.r, ryb.y, ryb.b);
+        plotVectorscope(chromaticity.x, chromaticity.y2, r, g, b);
+        // Alpha channel is totally ignored here.
+
+    }
+}
+
+function convertToRYB(r: number, g: number, b: number): RYB {
+
+    // white
+    let w = Math.min(r, g, b);
+
+    r -= w;
+    g -= w;
+    b -= w;
+
+    const maxRgb = Math.max(r, g, b);
+
+    let y = Math.min(r, g);
+    r -= y;
+    g -= y;
+
+    // if green is still present, we remove it
+    if (b > 0 && g > 0) {
+        b /= 2;
+        g /= 2;
+    }
+
+    y += g;
+    b += g;
+
+    const maxRyb = Math.max(r, y, b);
+    if (maxRyb > 0) {
+        const n = maxRgb / maxRyb;
+
+        r *= n;
+        y *= n;
+        b *= n;
+    }
+
+    // add white back in
+    r += w;
+    y += w;
+    b += w;
+
+    return {r, y, b};
+}
+
+function RYBtoHCV(r: number, y: number, b: number): HCV {
+    const max = Math.max(r, y, b);
+    const min = Math.min(r, y, b);
+
+    const chroma = max - min;
+
+    let hue: number;
+    if (chroma === 0) {
+        hue = 0; // gray
+    } else if (max === r) {
+        hue = ((y - b) / chroma) % 6;
+    } else if (max === y) {
+        hue = ((b - r) / chroma) + 2;
+    }
+    else {
+        hue = ((r - y) / chroma) + 4;
+    }
+
+    hue /= 6;
+
+    return {h: hue, c: chroma, v: max};
+}
+
+function logarithmicScale(value: number, maxRadius: number): number {
+    if (value === 0) return 0;
+
+    const sign = Math.sign(value);
+    const absValue = Math.abs(value);
+
+    return sign * Math.log(1 + absValue) / Math.log(1 + maxRadius);
+}
+
+function getChromaticity(r: number, y: number, b: number): Chromaticity {
+    const hcv = RYBtoHCV(r, y, b);
+
+    const alpha = 2 * Math.PI * hcv.h;
+
+    // scale down to [-1, 1]
+    const scale = 0.0025;
+
+    let x = Math.cos(alpha) * hcv.c * scale;
+    // TODO i really dont like this variable name
+    let y2 = Math.sin(alpha) * hcv.c * scale;
+
+    const maxRadius = 1;
+
+    x = logarithmicScale(x, maxRadius);
+    y2 = logarithmicScale(y2, maxRadius);
+
+    return {x, y2};
+}
+
+function plotVectorscope(x: number, y: number, r: number, g: number, b: number): void{
+
+    // console.log("Plotting with " , x, " " , y);
+    const centerX = scopeCanvas.width / 2;
+    const centerY = scopeCanvas.height / 2;
+    const radius = Math.min(centerX, centerY) * 0.9;
+
+    x = Math.max(-1, Math.min(1, x));
+    y = Math.max(-1, Math.min(1, y));
+
+    const scaledX = (-x) * radius; // rotate it by 90*, similar to Darktable and make red north
+    const scaledY = y * radius;
+
+    const plotX = centerX - scaledX;
+    const plotY = centerY - scaledY; // inverted
+
+    // console.log("Plot coords: ", plotX, plotY);
+
+    scopeCtx.fillStyle = "rgba(" + r + "," + g + "," + b + ", 0.05 )";
+    scopeCtx.beginPath();
+    scopeCtx.arc(plotX, plotY, 1, 0, 2 * Math.PI);
+    scopeCtx.fill();
+}
+
+function drawVectorBackground(): void {
+    const centerX = scopeCanvas.width / 2;
+    const centerY = scopeCanvas.height / 2;
+    const radius = Math.min(centerX, centerY) * 0.9;
+
+    // clear prev canvas
+    scopeCtx.clearRect(0, 0, scopeCanvas.width, scopeCanvas.height);
+
+    // circular boundary
+    scopeCtx.beginPath();
+    scopeCtx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    scopeCtx.strokeStyle = 'rgba(200, 200, 200, 0.5)';
+    scopeCtx.stroke();
+
+    // draw axes
+    scopeCtx.beginPath();
+    scopeCtx.moveTo(centerX - radius, centerY);
+    scopeCtx.lineTo(centerX + radius, centerY);
+    scopeCtx.moveTo(centerX, centerY - radius);
+    scopeCtx.lineTo(centerX, centerY + radius);
+    scopeCtx.strokeStyle = 'rgba(150, 150, 150, 0.5)';
+    scopeCtx.stroke();
+
+    // circle axes references
+    scopeCtx.beginPath();
+    scopeCtx.arc(centerX, centerY, radius * 0.75, 0, 2*Math.PI);
+    scopeCtx.stroke();
+
+    scopeCtx.beginPath();
+    scopeCtx.arc(centerX, centerY, radius * 0.5, 0, 2*Math.PI);
+    scopeCtx.stroke();
+
+    scopeCtx.beginPath();
+    scopeCtx.arc(centerX, centerY, radius * 0.25, 0, 2*Math.PI);
+    scopeCtx.stroke();
+}
