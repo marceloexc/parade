@@ -91,7 +91,9 @@ input[type=file] {
 }
 
 #drop-area {
-	border: 3px dashed blue;
+	border: 2px dotted white;
+	padding: 1.5em;
+	margin-block: 1em;
 }
 
 #drop-area.highlight {

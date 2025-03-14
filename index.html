@@ -14,18 +14,17 @@
 
     <div class="workspace">
             <div class="image_thumbnail" id="result">
+                <p id="image_thumbnail_filename">No Available Image</p>
                   <canvas class="result" id="image" width="512" height="512"></canvas>
               </div>
             <div class="config">
 
                 <div id="drop-area">
                     <input type="file" id="image-input" accept="image/*" onchange="handleImage(this.files)">
-
-                    <br>
-
-                    <button id="refresh">Refresh</button>
-                    <button id="cursor_test">Change cursor</button>
                 </div>
+
+                <button id="refresh">Refresh</button>
+                <button id="cursor_test">Change cursor</button>
             </div>
 
         <main class="vectorscope_preview">
